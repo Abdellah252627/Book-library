@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة تحكم المسؤول - مكتبة أمة اقرأ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="auth-protect.js"></script>
+  <style>
+    body { 
+      background:#f7f7fa; 
+      font-family: 'Cairo', Tahoma, Arial, sans-serif;
+    }
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .admin-box { 
+      background:#fff; 
+      border-radius:12px; 
+      box-shadow:0 2px 8px #0001; 
+      padding:2.5rem 2rem; 
+      text-align:center; 
+      margin-bottom: 2rem;
+    }
+    .admin-title { 
+      font-size:2rem; 
+      color:#b8860b; 
+      margin-bottom:1.2rem; 
+    }
+    .admin-links a { 
+      display:inline-block; 
+      margin:0.5rem 1rem; 
+      color:#1a237e; 
+      font-weight:bold; 
+      text-decoration:none; 
+    }
+    .admin-links a:hover { 
+      text-decoration:underline; 
+    }
+    .admin-section {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #0001;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .admin-section h3 {
+      color: #b8860b;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid #e9ecef;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #b8860b;
+    }
+    .stat-label {
+      color: #666;
+      margin-top: 0.5rem;
+    }
+    .books-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px #0001;
+    }
+    .books-table th,
+    .books-table td {
+      padding: 1rem;
+      text-align: right;
+      border-bottom: 1px solid #eee;
+    }
+    .books-table th {
+      background: #f8f9fa;
+      font-weight: bold;
+      color: #333;
+    }
+    .books-table tr:hover {
+      background: #f8f9fa;
+    }
+    .status-pending { background: #fff3cd; }
+    .status-accepted { background: #d4edda; }
+    .status-rejected { background: #f8d7da; }
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin: 0.2rem;
+    }
+    .btn-accept { background: #28a745; color: white; }
+    .btn-reject { background: #dc3545; color: white; }
+    .btn-edit { background: #ffc107; color: #333; }
+    .btn-delete { background: #6c757d; color: white; }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #b8860b;
+      box-shadow: 0 0 0 2px rgba(184,134,11,0.2);
+    }
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      color: white;
+      z-index: 10000;
+      animation: slideIn 0.3s ease;
+    }
+    .notification.success { background: #28a745; }
+    .notification.error { background: #dc3545; }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <div class="admin-box">
+      <div class="admin-title">لوحة تحكم المسؤول</div>
+      <div id="admin-welcome" style="margin-bottom:1.2rem;font-size:1.1rem;"></div>
+      <div class="admin-links">
+        <a href="index.html">العودة للرئيسية</a>
+        <a href="profile.html">الملف الشخصي</a>
+      </div>
+    </div>
+
+    <!-- إحصائيات سريعة -->
+    <div class="admin-section">
+      <h3>📊 إحصائيات سريعة</h3>
+      <div class="stats-grid" id="stats-grid">
+        <!-- سيتم ملؤها بالجافاسكريبت -->
+      </div>
+    </div>
+
+    <!-- مراجعة الكتب المرفوعة -->
+    <div class="admin-section">
+      <h3>📚 مراجعة الكتب المرفوعة</h3>
+      <div id="review-books-list"></div>
+    </div>
+  </div>
+
+  <!-- نافذة التعديل -->
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#b8860b;margin-bottom:1.2rem;">تعديل بيانات الكتاب</h3>
+      <form id="edit-book-form">
+        <div class="form-group">
+          <label for="edit-title">العنوان</label>
+          <input type="text" id="edit-title" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-author">المؤلف</label>
+          <input type="text" id="edit-author" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-category">التصنيف</label>
+          <select id="edit-category" required>
+            <option value="">اختر التصنيف</option>
+            <option value="تطوير الذات">تطوير الذات</option>
+            <option value="روايات">روايات</option>
+            <option value="تاريخ إسلامي">تاريخ إسلامي</option>
+            <option value="أدب">أدب</option>
+            <option value="شعر">شعر</option>
+            <option value="دين">دين</option>
+            <option value="علوم">علوم</option>
+            <option value="طب">طب</option>
+            <option value="هندسة">هندسة</option>
+            <option value="اقتصاد">اقتصاد</option>
+            <option value="إدارة أعمال">إدارة أعمال</option>
+            <option value="سياسة">سياسة</option>
+            <option value="فلسفة">فلسفة</option>
+            <option value="علم نفس">علم نفس</option>
+            <option value="تربية">تربية</option>
+            <option value="تعليم">تعليم</option>
+            <option value="قانون">قانون</option>
+            <option value="قصص أطفال">قصص أطفال</option>
+            <option value="سير ذاتية">سير ذاتية</option>
+            <option value="تكنولوجيا">تكنولوجيا</option>
+            <option value="كمبيوتر">كمبيوتر</option>
+            <option value="برمجة">برمجة</option>
+            <option value="رياضيات">رياضيات</option>
+            <option value="فيزياء">فيزياء</option>
+            <option value="كيمياء">كيمياء</option>
+            <option value="أحياء">أحياء</option>
+            <option value="جغرافيا">جغرافيا</option>
+            <option value="فكر">فكر</option>
+            <option value="إعلام">إعلام</option>
+            <option value="فن">فن</option>
+            <option value="تصميم">تصميم</option>
+            <option value="تسويق">تسويق</option>
+            <option value="تاريخ">تاريخ</option>
+            <option value="اجتماع">اجتماع</option>
+            <option value="لغات">لغات</option>
+            <option value="ترجمة">ترجمة</option>
+            <option value="دراسات إسلامية">دراسات إسلامية</option>
+            <option value="حديث">حديث</option>
+            <option value="تفسير">تفسير</option>
+            <option value="فقه">فقه</option>
+            <option value="أصول الدين">أصول الدين</option>
+            <option value="تفسير أحلام">تفسير أحلام</option>
+            <option value="طبخ">طبخ</option>
+            <option value="سفر">سفر</option>
+            <option value="سياحة">سياحة</option>
+            <option value="موسيقى">موسيقى</option>
+            <option value="تربية رياضية">تربية رياضية</option>
+            <option value="تنمية بشرية">تنمية بشرية</option>
+            <option value="مسرح">مسرح</option>
+            <option value="مقالات">مقالات</option>
+            <option value="مجلات">مجلات</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edit-desc">الوصف</label>
+          <textarea id="edit-desc" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="edit-cover">تغيير صورة الغلاف (اختياري)</label>
+          <input type="file" id="edit-cover" accept="image/*">
+          <img id="edit-cover-preview" src="" alt="معاينة الغلاف" style="width:100px;height:140px;object-fit:cover;border-radius:6px;margin-top:0.5rem;display:none;">
+        </div>
+        <div class="form-group">
+          <label for="edit-pdf">تغيير ملف الكتاب PDF (اختياري)</label>
+          <input type="file" id="edit-pdf" accept=".pdf">
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-accept">حفظ التعديلات</button>
+          <button type="button" id="close-edit-modal" class="btn btn-delete">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // الحصول على المستخدم الحالي
+    function getCurrentUser() {
+      try {
+        return JSON.parse(localStorage.getItem('currentUser'));
+      } catch {
+        return null;
+      }
+    }
+
+    // إضافة إشعار للمستخدم
+    function addNotifForUser(userEmail, text, type = 'info', link = null) {
+      const notifs = JSON.parse(localStorage.getItem('centerNotifs') || '[]');
+      notifs.unshift({
+        id: Date.now(),
+        text: text,
+        type: type,
+        link: link,
+        date: new Date().toISOString(),
+        read: false,
+        userEmail: userEmail
+      });
+      localStorage.setItem('centerNotifs', JSON.stringify(notifs));
+    }
+
+    // عرض إشعار
+    function showNotification(message, isError = false) {
+      const notification = document.createElement('div');
+      notification.className = `notification ${isError ? 'error' : 'success'}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    // تحديث الإحصائيات
+    async function updateStats() {
+      const statsGrid = document.getElementById('stats-grid');
+      
+      try {
+        // جلب الكتب الأساسية
+        const response = await fetch('books.json');
+        const basicBooks = await response.json();
+        
+        // جلب الكتب المرفوعة
+        const uploadedBooks = JSON.parse(localStorage.getItem('uploadedBooks') || '[]');
+        const acceptedBooks = uploadedBooks.filter(b => b.status === 'accepted');
+        
+        // جلب المستخدمين
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // جلب التعليقات
+        const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+        
+        // جلب المفضلة
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        
+        const totalBooks = basicBooks.length + acceptedBooks.length;
+        const totalUsers = users.length + 1; // +1 للمسؤول
+        const totalComments = comments.length;
+        const totalFavorites = favorites.length;
+        const pendingBooks = uploadedBooks.filter(b => b.status === 'pending').length;
+        
+        statsGrid.innerHTML = `
+          <div class="stat-card">
+            <div class="stat-number">${totalBooks}</div>
+            <div class="stat-label">إجمالي الكتب</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${totalUsers}</div>
+            <div class="stat-label">عدد المستخدمين</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${totalComments}</div>
+            <div class="stat-label">عدد التعليقات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${totalFavorites}</div>
+            <div class="stat-label">إجمالي المفضلة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${pendingBooks}</div>
+            <div class="stat-label">كتب قيد المراجعة</div>
+          </div>
+        `;
+      } catch (error) {
+        console.error('خطأ في تحديث الإحصائيات:', error);
+        statsGrid.innerHTML = '<p style="color:#e53e3e;">حدث خطأ في تحميل الإحصائيات</p>';
+      }
+    }
+
+    // عرض الكتب المرفوعة
+    function renderBooks() {
+      const reviewDiv = document.getElementById('review-books-list');
+      const uploaded = JSON.parse(localStorage.getItem('uploadedBooks') || '[]');
+      
+      if (uploaded.length === 0) {
+        reviewDiv.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">لا توجد كتب مرفوعة بعد.</p>';
+        return;
+      }
+      
+      let tableHTML = `
+        <table class="books-table">
+          <thead>
+            <tr>
+              <th>الغلاف</th>
+              <th>العنوان</th>
+              <th>المؤلف</th>
+              <th>الرافع</th>
+              <th>التصنيف</th>
+              <th>الحالة</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      uploaded.forEach((book, index) => {
+        const statusClass = book.status === 'accepted' ? 'status-accepted' : 
+                           book.status === 'rejected' ? 'status-rejected' : 'status-pending';
+        
+        const statusText = book.status === 'pending' ? 'قيد المراجعة' : 
+                          book.status === 'accepted' ? 'مقبول' : 'مرفوض';
+        
+        const date = new Date(book.uploadDate || Date.now()).toLocaleDateString('ar-SA');
+        
+        tableHTML += `
+          <tr class="${statusClass}">
+            <td><img src="${book.cover}" alt="غلاف" style="width:50px;height:70px;object-fit:cover;border-radius:6px;"></td>
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.uploader || '-'}</td>
+            <td>${book.category}</td>
+            <td>
+              ${statusText}
+              ${book.reviewNote ? `<br><small style="color:#e53e3e;">${book.reviewNote}</small>` : ''}
+            </td>
+            <td>${date}</td>
+            <td>
+              ${book.status === 'pending' ? `
+                <button class="btn btn-accept" onclick="acceptBook(${index})">قبول</button>
+                <button class="btn btn-reject" onclick="rejectBook(${index})">رفض</button>
+                <button class="btn btn-edit" onclick="editBook(${index})">تعديل</button>
+              ` : ''}
+              <button class="btn btn-delete" onclick="deleteBook(${index})">حذف</button>
+            </td>
+          </tr>
+        `;
+      });
+      
+      tableHTML += '</tbody></table>';
+      reviewDiv.innerHTML = tableHTML;
+    }
+
+    // قبول كتاب
+    function acceptBook(index) {
+      const uploaded = JSON.parse(localStorage.getItem('uploadedBooks') || '[]');
+      const book = uploaded[index];
+      
+      book.status = 'accepted';
+      book.reviewNote = '';
+      book.reviewDate = new Date().toISOString();
+      
+      localStorage.setItem('uploadedBooks', JSON.stringify(uploaded));
+      
+      // إشعار المستخدم
+      if (book.uploaderEmail) {
+        addNotifForUser(book.uploaderEmail, `✅ تم قبول كتابك: ${book.title}`, 'success', `book.html?id=${book.id}`);
+      }
+      
+      showNotification('تم قبول الكتاب بنجاح');
+      renderBooks();
+      updateStats();
+    }
+
+    // رفض كتاب
+    function rejectBook(index) {
+      const uploaded = JSON.parse(localStorage.getItem('uploadedBooks') || '[]');
+      const book = uploaded[index];
+      
+      const note = prompt('سبب الرفض (اختياري):');
+      
+      book.status = 'rejected';
+      book.reviewNote = note || '';
+      book.reviewDate = new Date().toISOString();
+      
+      localStorage.setItem('uploadedBooks', JSON.stringify(uploaded));
+      
+      // إشعار المستخدم
+      if (book.uploaderEmail) {
+        addNotifForUser(book.uploaderEmail, `❌ تم رفض كتابك: ${book.title}${note ? ` (السبب: ${note})` : ''}`, 'error');
+      }
+      
+      showNotification('تم رفض الكتاب');
+      renderBooks();
+      updateStats();
+    }
+
+    // حذف كتاب
+    function deleteBook(index) {
+      if (!confirm('هل أنت متأكد من حذف هذا الكتاب نهائياً؟')) {
+        return;
+      }
+      
+      const uploaded = JSON.parse(localStorage.getItem('uploadedBooks') || '[]');
+      uploaded.splice(index, 1);
+      localStorage.setItem('uploadedBooks', JSON.stringify(uploaded));
+      
+      showNotification('تم حذف الكتاب بنجاح');
+      renderBooks();
+      updateStats();
+    }
+
+    // تعديل كتاب
+    function editBook(index) {
+      const uploaded = JSON.parse(localStorage.getItem('uploadedBooks') || '[]');
+      const book = uploaded[index];
+      
+      // تعبئة النموذج
+      document.getElementById('edit-title').value = book.title;
+      document.getElementById('edit-author').value = book.author;
+      document.getElementById('edit-category').value = book.category;
+      document.getElementById('edit-desc').value = book.description || '';
+      document.getElementById('edit-cover-preview').src = book.cover;
+      document.getElementById('edit-cover-preview').style.display = 'block';
+      
+      // إظهار النافذة
+      document.getElementById('edit-modal').style.display = 'flex';
+      
+      // معالجة الملفات الجديدة
+      let newCoverData = null;
+      let newPdfData = null;
+      
+      document.getElementById('edit-cover').onchange = function(e) {
+        if (this.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            newCoverData = evt.target.result;
+            document.getElementById('edit-cover-preview').src = newCoverData;
+          };
+          reader.readAsDataURL(this.files[0]);
+        }
+      };
+      
+      document.getElementById('edit-pdf').onchange = function(e) {
+        if (this.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            newPdfData = evt.target.result;
+          };
+          reader.readAsDataURL(this.files[0]);
+        }
+      };
+      
+      // معالجة حفظ التعديلات
+      document.getElementById('edit-book-form').onsubmit = function(e) {
+        e.preventDefault();
+        
+        const title = document.getElementById('edit-title').value.trim();
+        const author = document.getElementById('edit-author').value.trim();
+        const category = document.getElementById('edit-category').value.trim();
+        
+        if (!title || !author || !category) {
+          showNotification('يرجى ملء جميع الحقول المطلوبة', true);
+          return;
+        }
+        
+        // تحديث بيانات الكتاب
+        book.title = title;
+        book.author = author;
+        book.category = category;
+        book.description = document.getElementById('edit-desc').value.trim();
+        if (newCoverData) book.cover = newCoverData;
+        if (newPdfData) book.file = newPdfData;
+        book.lastModified = new Date().toISOString();
+        
+        localStorage.setItem('uploadedBooks', JSON.stringify(uploaded));
+        
+        // إغلاق النافذة
+        document.getElementById('edit-modal').style.display = 'none';
+        
+        showNotification('تم تعديل بيانات الكتاب بنجاح');
+        renderBooks();
+      };
+    }
+
+    // إغلاق نافذة التعديل
+    document.getElementById('close-edit-modal').onclick = function() {
+      document.getElementById('edit-modal').style.display = 'none';
+    };
+
+    // إغلاق النافذة عند النقر خارجها
+    document.getElementById('edit-modal').onclick = function(e) {
+      if (e.target === this) {
+        this.style.display = 'none';
+      }
+    };
+
+    // تهيئة الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentUser = getCurrentUser();
+      
+      if (!currentUser || currentUser.email !== 'manager') {
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      // عرض اسم المسؤول
+      document.getElementById('admin-welcome').textContent = `مرحباً ${currentUser.name || 'المسؤول'} 👋`;
+      
+      // تحديث الإحصائيات والكتب
+      updateStats();
+      renderBooks();
+    });
+  </script>
+</body>
+</html> 

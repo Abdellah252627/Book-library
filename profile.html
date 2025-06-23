@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الملف الشخصي - مكتبة أمة اقرأ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="auth-protect.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .profile-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .profile-header {
+      background: linear-gradient(135deg, #b8860b, #daa520);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .profile-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      opacity: 0.3;
+    }
+    
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid white;
+      margin: 0 auto 20px;
+      display: block;
+      object-fit: cover;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .profile-name {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .profile-email {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #b8860b;
+      margin-bottom: 10px;
+    }
+    
+    .stat-label {
+      color: #666;
+      font-size: 1rem;
+    }
+    
+    .profile-sections {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .profile-section {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .section-title {
+      font-size: 1.3rem;
+      color: #b8860b;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .favorites-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .favorite-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid #f0f0f0;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .favorite-item:hover {
+      border-color: #b8860b;
+      box-shadow: 0 2px 8px rgba(184,134,11,0.2);
+    }
+    
+    .favorite-cover {
+      width: 50px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-left: 15px;
+    }
+    
+    .favorite-info {
+      flex: 1;
+    }
+    
+    .favorite-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .favorite-author {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .remove-favorite {
+      background: #e53e3e;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    .activity-item {
+      padding: 15px;
+      border-left: 3px solid #b8860b;
+      margin-bottom: 15px;
+      background: #f9f9f9;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .activity-time {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+    
+    .activity-text {
+      color: #333;
+    }
+    
+    .settings-form {
+      display: grid;
+      gap: 20px;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-group label {
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .form-group input {
+      padding: 12px;
+      border: 2px solid #f0f0f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #b8860b;
+    }
+    
+    .btn-danger {
+      background: #e53e3e;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+    
+    .btn-danger:hover {
+      background: #c53030;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    @media (max-width: 768px) {
+      .profile-sections {
+        grid-template-columns: 1fr;
+      }
+      
+      .profile-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .profile-name {
+        font-size: 1.5rem;
+      }
+      
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+      }
+    }
+    
+    .filter-btn {
+      background: #f0f0f0;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      margin-left: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+    
+    .filter-btn.active {
+      background: #b8860b;
+      color: white;
+    }
+    
+    .filter-btn:hover {
+      background: #daa520;
+      color: white;
+    }
+    
+    .activity-item {
+      padding: 15px;
+      border-left: 3px solid #b8860b;
+      margin-bottom: 15px;
+      background: #f9f9f9;
+      border-radius: 0 8px 8px 0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .activity-item:hover {
+      background: #f0f0f0;
+      transform: translateX(-5px);
+    }
+    
+    .activity-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .activity-icon {
+      font-size: 1.2rem;
+      margin-left: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .activity-time {
+      color: #666;
+      font-size: 0.85rem;
+    }
+    
+    .activity-text {
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .activity-book-link {
+      color: #b8860b;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    .activity-book-link:hover {
+      text-decoration: underline;
+    }
+    
+    .activity-details {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .advanced-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .chart-container {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .goals-section {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    
+    .goal-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      border: 1px solid #f0f0f0;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background: #f9f9f9;
+    }
+    
+    .goal-info {
+      flex: 1;
+    }
+    
+    .goal-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    
+    .goal-progress {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .progress-bar {
+      width: 100px;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #b8860b, #daa520);
+      transition: width 0.3s ease;
+    }
+    
+    .comparison-section {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    
+    .comparison-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .comparison-item:last-child {
+      border-bottom: none;
+    }
+    
+    .user-rank {
+      background: #b8860b;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    
+    .rank-gold { background: #ffd700; }
+    .rank-silver { background: #c0c0c0; }
+    .rank-bronze { background: #cd7f32; }
+    
+    @media (max-width: 768px) {
+      .advanced-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script src="auth-protect.js"></script>
+  
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <h1>مكتبة أمة اقرأ</h1>
+      </div>
+      <nav>
+        <a href="index.html">الرئيسية</a>
+        <a href="favorites.html">المفضلة</a>
+        <a href="upload.html">رفع كتاب</a>
+        <a href="chat.html">الدردشة</a>
+        <a href="contact.html">تواصل معنا</a>
+        <a href="profile.html" class="active">الملف الشخصي</a>
+        <span id="user-info"></span>
+        <button id="logout-btn" onclick="logout()">تسجيل الخروج</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="profile-container">
+    <div class="profile-header">
+      <img id="user-avatar" class="profile-avatar" src="" alt="الصورة الشخصية">
+      <h2 id="user-name" class="profile-name"></h2>
+      <p id="user-email" class="profile-email"></p>
+      <p id="join-date" style="opacity: 0.8; position: relative; z-index: 1;"></p>
+    </div>
+
+    <div class="profile-stats">
+      <div class="stat-card">
+        <div id="favorites-count" class="stat-number">0</div>
+        <div class="stat-label">الكتب المفضلة</div>
+      </div>
+      <div class="stat-card">
+        <div id="ratings-count" class="stat-number">0</div>
+        <div class="stat-label">التقييمات</div>
+      </div>
+      <div class="stat-card">
+        <div id="comments-count" class="stat-number">0</div>
+        <div class="stat-label">التعليقات</div>
+      </div>
+      <div class="stat-card">
+        <div id="points-count" class="stat-number">0</div>
+        <div class="stat-label">النقاط</div>
+      </div>
+    </div>
+
+    <div class="profile-section" style="margin-bottom:30px;">
+      <h3 class="section-title">الشارات والإنجازات</h3>
+      <div id="badges-list" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
+    </div>
+
+    <div class="advanced-stats">
+      <div class="chart-container">
+        <h3 class="section-title">نشاط الشهر</h3>
+        <canvas id="activityChart" width="400" height="200"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3 class="section-title">توزيع التقييمات</h3>
+        <canvas id="ratingsChart" width="400" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="goals-section">
+      <h3 class="section-title">الأهداف الشخصية</h3>
+      <div id="goals-list">
+        <!-- سيتم ملؤها بالجافاسكريبت -->
+      </div>
+      <button id="add-goal-btn" class="btn" style="margin-top: 15px;">إضافة هدف جديد</button>
+    </div>
+
+    <div class="comparison-section">
+      <h3 class="section-title">مقارنة النشاط مع المستخدمين الآخرين</h3>
+      <div id="comparison-list">
+        <!-- سيتم ملؤها بالجافاسكريبت -->
+      </div>
+    </div>
+
+    <div class="profile-sections">
+      <div class="profile-section">
+        <h3 class="section-title">الكتب المفضلة</h3>
+        <div id="favorites-list" class="favorites-list">
+          <!-- سيتم ملؤها بالجافاسكريبت -->
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3 class="section-title">آخر النشاطات</h3>
+        <div style="margin-bottom:15px;">
+          <button class="filter-btn active" data-filter="all">الكل</button>
+          <button class="filter-btn" data-filter="rating">التقييمات</button>
+          <button class="filter-btn" data-filter="comment">التعليقات</button>
+          <button class="filter-btn" data-filter="favorite">المفضلة</button>
+        </div>
+        <div id="activity-list">
+          <!-- سيتم ملؤها بالجافاسكريبت -->
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <h3 class="section-title">إعدادات الحساب</h3>
+      <form id="settings-form" class="settings-form">
+        <div class="form-group">
+          <label for="current-password">كلمة المرور الحالية</label>
+          <input type="password" id="current-password" required>
+        </div>
+        <div class="form-group">
+          <label for="new-password">كلمة المرور الجديدة</label>
+          <input type="password" id="new-password" required>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">تأكيد كلمة المرور الجديدة</label>
+          <input type="password" id="confirm-password" required>
+        </div>
+        <button type="submit" class="btn">تغيير كلمة المرور</button>
+      </form>
+      
+      <hr style="margin: 30px 0;">
+      
+      <div style="text-align: center;">
+        <h4 style="color: #e53e3e; margin-bottom: 15px;">حذف الحساب</h4>
+        <p style="color: #666; margin-bottom: 20px;">تحذير: هذا الإجراء لا يمكن التراجع عنه</p>
+        <button id="delete-account-btn" class="btn-danger">حذف الحساب نهائياً</button>
+      </div>
+    </div>
+
+    <div class="profile-section" style="margin-top:30px;">
+      <h3 class="section-title">تصدير واستيراد البيانات</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;">
+        <button id="export-btn" class="btn">تصدير بياناتي</button>
+        <label class="btn" style="margin-bottom:0;cursor:pointer;">
+          استيراد بيانات
+          <input type="file" id="import-input" accept="application/json" style="display:none;">
+        </label>
+      </div>
+      <div id="import-status" style="margin-top:10px;color:#e53e3e;font-size:1rem;"></div>
+    </div>
+  </div>
+
+  <script>
+    // تحميل بيانات المستخدم
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+      window.location.href = 'login.html';
+    }
+
+    // تعبئة معلومات المستخدم
+    document.getElementById('user-name').textContent = currentUser.name;
+    document.getElementById('user-email').textContent = currentUser.email;
+    document.getElementById('user-avatar').src = currentUser.avatar || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="35" r="20" fill="%23b8860b"/><path d="M20 85c0-16.6 13.4-30 30-30s30 13.4 30 30" fill="%23b8860b"/></svg>';
+    
+    // تاريخ التسجيل
+    const joinDate = new Date(currentUser.joinDate || Date.now());
+    document.getElementById('join-date').textContent = `عضو منذ ${joinDate.toLocaleDateString('ar-SA')}`;
+
+    // تحميل الإحصائيات
+    function loadStats() {
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      const ratings = JSON.parse(localStorage.getItem('ratings') || '[]');
+      const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+      const userPoints = JSON.parse(localStorage.getItem('userPoints') || '{}');
+      
+      document.getElementById('favorites-count').textContent = favorites.length;
+      document.getElementById('ratings-count').textContent = ratings.length;
+      document.getElementById('comments-count').textContent = comments.length;
+      document.getElementById('points-count').textContent = userPoints[currentUser.email] || 0;
+    }
+
+    // تحميل الكتب المفضلة
+    function loadFavorites() {
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      const books = JSON.parse(localStorage.getItem('books') || '[]');
+      const uploadedBooks = JSON.parse(localStorage.getItem('uploadedBooks') || '[]');
+      const allBooks = [...books, ...uploadedBooks];
+      
+      const favoritesList = document.getElementById('favorites-list');
+      
+      if (favorites.length === 0) {
+        favoritesList.innerHTML = `
+          <div class="empty-state">
+            <i>📚</i>
+            <p>لا توجد كتب في المفضلة</p>
+            <a href="index.html" class="btn">تصفح الكتب</a>
+          </div>
+        `;
+        return;
+      }
+      
+      favoritesList.innerHTML = favorites.map(fav => {
+        const book = allBooks.find(b => b.id === fav.bookId);
+        if (!book) return '';
+        
+        return `
+          <div class="favorite-item">
+            <img src="${book.cover}" alt="${book.title}" class="favorite-cover">
+            <div class="favorite-info">
+              <div class="favorite-title">${book.title}</div>
+              <div class="favorite-author">${book.author}</div>
+            </div>
+            <button class="remove-favorite" onclick="removeFavorite('${book.id}')">إزالة</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // إزالة من المفضلة
+    function removeFavorite(bookId) {
+      let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      favorites = favorites.filter(fav => fav.bookId !== bookId);
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      loadFavorites();
+      loadStats();
+    }
+
+    // تحميل النشاطات
+    function loadActivity() {
+      const ratings = JSON.parse(localStorage.getItem('ratings') || '[]');
+      const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      
+      const activities = [];
+      
+      // إضافة التقييمات
+      ratings.forEach(rating => {
+        activities.push({
+          type: 'rating',
+          icon: '⭐',
+          text: `قمت بتقييم كتاب`,
+          bookTitle: rating.bookTitle,
+          bookId: rating.bookId,
+          details: `${rating.rating} نجوم`,
+          date: rating.date
+        });
+      });
+      
+      // إضافة التعليقات
+      comments.forEach(comment => {
+        activities.push({
+          type: 'comment',
+          icon: '💬',
+          text: `علق على كتاب`,
+          bookTitle: comment.bookTitle,
+          bookId: comment.bookId,
+          details: `"${comment.comment.substring(0, 50)}${comment.comment.length > 50 ? '...' : ''}"`,
+          date: comment.date
+        });
+      });
+      
+      // إضافة المفضلة
+      favorites.forEach(fav => {
+        activities.push({
+          type: 'favorite',
+          icon: '❤️',
+          text: `أضاف كتاب للمفضلة`,
+          bookTitle: fav.bookTitle,
+          bookId: fav.bookId,
+          details: '',
+          date: fav.date
+        });
+      });
+      
+      // ترتيب حسب التاريخ
+      activities.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      // حفظ النشاطات في متغير عام للتصفية
+      window.allActivities = activities;
+      
+      renderActivities('all');
+    }
+
+    // عرض النشاطات مع التصفية
+    function renderActivities(filter = 'all') {
+      const activities = filter === 'all' ? window.allActivities : window.allActivities.filter(a => a.type === filter);
+      const activityList = document.getElementById('activity-list');
+      
+      if (activities.length === 0) {
+        activityList.innerHTML = `
+          <div class="empty-state">
+            <i>📝</i>
+            <p>لا توجد نشاطات ${filter !== 'all' ? 'من هذا النوع' : ''} بعد</p>
+          </div>
+        `;
+        return;
+      }
+      
+      activityList.innerHTML = activities.slice(0, 15).map(activity => `
+        <div class="activity-item" onclick="openBook('${activity.bookId}')">
+          <div class="activity-header">
+            <span class="activity-icon">${activity.icon}</span>
+            <span class="activity-time">${new Date(activity.date).toLocaleDateString('ar-SA')} - ${new Date(activity.date).toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'})}</span>
+          </div>
+          <div class="activity-text">
+            ${activity.text} 
+            <a href="#" class="activity-book-link" onclick="event.stopPropagation(); openBook('${activity.bookId}')">"${activity.bookTitle}"</a>
+          </div>
+          ${activity.details ? `<div class="activity-details">${activity.details}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    // فتح الكتاب
+    function openBook(bookId) {
+      localStorage.setItem('selectedBookId', bookId);
+      window.open('book.html', '_blank');
+    }
+
+    // إعداد أزرار التصفية
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          // إزالة الفئة النشطة من جميع الأزرار
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          // إضافة الفئة النشطة للزر المحدد
+          this.classList.add('active');
+          // عرض النشاطات المفلترة
+          renderActivities(this.dataset.filter);
+        });
+      });
+    });
+
+    // تغيير كلمة المرور
+    document.getElementById('settings-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      
+      if (newPassword !== confirmPassword) {
+        alert('كلمة المرور الجديدة غير متطابقة');
+        return;
+      }
+      
+      if (currentPassword !== currentUser.password) {
+        alert('كلمة المرور الحالية غير صحيحة');
+        return;
+      }
+      
+      // تحديث كلمة المرور
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userIndex = users.findIndex(u => u.email === currentUser.email);
+      
+      if (userIndex !== -1) {
+        users[userIndex].password = newPassword;
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // تحديث المستخدم الحالي
+        currentUser.password = newPassword;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        alert('تم تغيير كلمة المرور بنجاح');
+        document.getElementById('settings-form').reset();
+      }
+    });
+
+    // حذف الحساب
+    document.getElementById('delete-account-btn').addEventListener('click', function() {
+      if (confirm('هل أنت متأكد من حذف الحساب؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+        if (confirm('تأكيد نهائي: هل تريد حذف الحساب؟')) {
+          // حذف بيانات المستخدم
+          const users = JSON.parse(localStorage.getItem('users') || '[]');
+          const filteredUsers = users.filter(u => u.email !== currentUser.email);
+          localStorage.setItem('users', JSON.stringify(filteredUsers));
+          
+          // حذف البيانات المرتبطة
+          localStorage.removeItem('currentUser');
+          
+          alert('تم حذف الحساب بنجاح');
+          window.location.href = 'login.html';
+        }
+      }
+    });
+
+    // منطق احتساب الشارات
+    function getUserBadges() {
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      const uploadedBooks = JSON.parse(localStorage.getItem('uploadedBooks') || '[]');
+      const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+      const ratings = JSON.parse(localStorage.getItem('ratings') || '[]');
+      const userPoints = JSON.parse(localStorage.getItem('userPoints') || '{}');
+      const points = userPoints[currentUser.email] || 0;
+      // تعريف الشارات
+      const badges = [
+        {
+          id: 'active-reader',
+          icon: '📚',
+          name: 'قارئ نشط',
+          desc: 'أضفت 10 كتب أو أكثر للمفضلة',
+          achieved: favorites.length >= 10
+        },
+        {
+          id: 'uploader',
+          icon: '⬆️',
+          name: 'رافع كتب',
+          desc: 'رفعت 3 كتب أو أكثر',
+          achieved: uploadedBooks.filter(b=>b.uploader===currentUser.email).length >= 3
+        },
+        {
+          id: 'commenter',
+          icon: '💬',
+          name: 'معلق مميز',
+          desc: 'أضفت 5 تعليقات أو أكثر',
+          achieved: comments.length >= 5
+        },
+        {
+          id: 'pro-rater',
+          icon: '⭐',
+          name: 'مقيم محترف',
+          desc: 'قمت بتقييم 5 كتب أو أكثر',
+          achieved: ratings.length >= 5
+        },
+        {
+          id: 'gold-member',
+          icon: '🏅',
+          name: 'عضو ذهبي',
+          desc: 'جمعت 100 نقطة أو أكثر',
+          achieved: points >= 100
+        }
+      ];
+      return badges;
+    }
+
+    // عرض الشارات
+    function renderBadges() {
+      const badges = getUserBadges();
+      const list = document.getElementById('badges-list');
+      if (!badges.some(b=>b.achieved)) {
+        list.innerHTML = `<div class='empty-state'><i>🎖️</i><p>لم تحصل على أي شارة بعد<br>ابدأ نشاطك لتحصل على الشارات!</p></div>`;
+        return;
+      }
+      list.innerHTML = badges.filter(b=>b.achieved).map(badge=>`
+        <div style="background:#fffbe6;border:1.5px solid #ffe082;padding:18px 16px;border-radius:12px;min-width:140px;box-shadow:0 2px 8px #0001;text-align:center;">
+          <div style="font-size:2.2rem;">${badge.icon}</div>
+          <div style="font-weight:bold;color:#b8860b;margin:7px 0 3px;">${badge.name}</div>
+          <div style="font-size:0.98rem;color:#666;">${badge.desc}</div>
+        </div>
+      `).join('');
+    }
+
+    // تحميل الأهداف الشخصية
+    function loadGoals() {
+      let goals = JSON.parse(localStorage.getItem('userGoals') || '[]');
+      const userGoals = goals.filter(g => g.userEmail === currentUser.email);
+      
+      if (userGoals.length === 0) {
+        // إنشاء أهداف افتراضية
+        const defaultGoals = [
+          {
+            id: 'read-50-books',
+            title: 'قراءة 50 كتاب',
+            target: 50,
+            current: 0,
+            type: 'favorites',
+            period: 'month',
+            userEmail: currentUser.email
+          },
+          {
+            id: 'rate-20-books',
+            title: 'تقييم 20 كتاب',
+            target: 20,
+            current: 0,
+            type: 'ratings',
+            period: 'month',
+            userEmail: currentUser.email
+          },
+          {
+            id: 'comment-10-times',
+            title: 'التعليق 10 مرات',
+            target: 10,
+            current: 0,
+            type: 'comments',
+            period: 'month',
+            userEmail: currentUser.email
+          }
+        ];
+        goals = [...goals, ...defaultGoals];
+        localStorage.setItem('userGoals', JSON.stringify(goals));
+      }
+      
+      // تحديث التقدم الحالي
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      const ratings = JSON.parse(localStorage.getItem('ratings') || '[]');
+      const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+      
+      goals.forEach(goal => {
+        if (goal.userEmail === currentUser.email) {
+          switch(goal.type) {
+            case 'favorites':
+              goal.current = favorites.length;
+              break;
+            case 'ratings':
+              goal.current = ratings.length;
+              break;
+            case 'comments':
+              goal.current = comments.length;
+              break;
+          }
+        }
+      });
+      
+      localStorage.setItem('userGoals', JSON.stringify(goals));
+      renderGoals();
+    }
+    
+    // عرض الأهداف
+    function renderGoals() {
+      const goals = JSON.parse(localStorage.getItem('userGoals') || '[]');
+      const userGoals = goals.filter(g => g.userEmail === currentUser.email);
+      
+      const goalsList = document.getElementById('goals-list');
+      
+      if (userGoals.length === 0) {
+        goalsList.innerHTML = `
+          <div class="empty-state">
+            <i>🎯</i>
+            <p>لا توجد أهداف محددة</p>
+          </div>
+        `;
+        return;
+      }
+      
+      goalsList.innerHTML = userGoals.map(goal => {
+        const progress = Math.min((goal.current / goal.target) * 100, 100);
+        const isCompleted = goal.current >= goal.target;
+        
+        return `
+          <div class="goal-item ${isCompleted ? 'completed' : ''}">
+            <div class="goal-info">
+              <div class="goal-title">${goal.title}</div>
+              <div class="goal-progress">${goal.current} / ${goal.target}</div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+              </div>
+            </div>
+            <div style="font-size: 1.5rem;">${isCompleted ? '✅' : '🎯'}</div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // تحميل مقارنة النشاط
+    function loadComparison() {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userPoints = JSON.parse(localStorage.getItem('userPoints') || '{}');
+      const uploadedBooks = JSON.parse(localStorage.getItem('uploadedBooks') || '[]');
+      
+      // حساب نقاط كل مستخدم
+      const userStats = users.map(user => {
+        const points = userPoints[user.email] || 0;
+        const uploadedCount = uploadedBooks.filter(b => b.uploader === user.email).length;
+        return {
+          name: user.name,
+          email: user.email,
+          points: points,
+          uploaded: uploadedCount,
+          totalScore: points + (uploadedCount * 10)
+        };
+      });
+      
+      // ترتيب حسب النقاط
+      userStats.sort((a, b) => b.totalScore - a.totalScore);
+      
+      // العثور على ترتيب المستخدم الحالي
+      const currentUserRank = userStats.findIndex(u => u.email === currentUser.email) + 1;
+      
+      const comparisonList = document.getElementById('comparison-list');
+      
+      comparisonList.innerHTML = `
+        <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px;">
+          <h4 style="color: #b8860b; margin-bottom: 10px;">ترتيبك الحالي</h4>
+          <div style="font-size: 2rem; font-weight: bold; color: #b8860b;">#${currentUserRank}</div>
+          <div style="color: #666;">من أصل ${userStats.length} مستخدم</div>
+        </div>
+      ` + userStats.slice(0, 10).map((user, index) => {
+        const isCurrentUser = user.email === currentUser.email;
+        let rankClass = '';
+        if (index === 0) rankClass = 'rank-gold';
+        else if (index === 1) rankClass = 'rank-silver';
+        else if (index === 2) rankClass = 'rank-bronze';
+        
+        return `
+          <div class="comparison-item ${isCurrentUser ? 'current-user' : ''}" style="${isCurrentUser ? 'background: #fffbe6; border-radius: 8px;' : ''}">
+            <div style="display: flex; align-items: center;">
+              <span class="user-rank ${rankClass}" style="margin-left: 10px;">#${index + 1}</span>
+              <span style="font-weight: ${isCurrentUser ? 'bold' : 'normal'}">${user.name}</span>
+            </div>
+            <div style="text-align: left;">
+              <div style="font-weight: bold; color: #b8860b;">${user.totalScore} نقطة</div>
+              <div style="font-size: 0.9rem; color: #666;">${user.uploaded} كتاب مرفوع</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // إنشاء مخطط نشاط الشهر
+    function createActivityChart() {
+      const ctx = document.getElementById('activityChart').getContext('2d');
+      const activities = window.allActivities || [];
+      
+      // تجميع النشاطات حسب اليوم
+      const dailyActivity = {};
+      const last30Days = [];
+      
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
+        last30Days.push(dateStr);
+        dailyActivity[dateStr] = 0;
+      }
+      
+      activities.forEach(activity => {
+        const activityDate = new Date(activity.date).toISOString().split('T')[0];
+        if (dailyActivity.hasOwnProperty(activityDate)) {
+          dailyActivity[activityDate]++;
+        }
+      });
+      
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: last30Days.map(date => new Date(date).toLocaleDateString('ar-SA', {day: '2-digit', month: '2-digit'})),
+          datasets: [{
+            label: 'النشاط اليومي',
+            data: last30Days.map(date => dailyActivity[date]),
+            borderColor: '#b8860b',
+            backgroundColor: 'rgba(184, 134, 11, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    // إنشاء مخطط توزيع التقييمات
+    function createRatingsChart() {
+      const ctx = document.getElementById('ratingsChart').getContext('2d');
+      const ratings = JSON.parse(localStorage.getItem('ratings') || '[]');
+      
+      const ratingCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+      ratings.forEach(rating => {
+        ratingCounts[rating.rating]++;
+      });
+      
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['1 نجمة', '2 نجوم', '3 نجوم', '4 نجوم', '5 نجوم'],
+          datasets: [{
+            data: [ratingCounts[1], ratingCounts[2], ratingCounts[3], ratingCounts[4], ratingCounts[5]],
+            backgroundColor: [
+              '#e53e3e',
+              '#ed8936',
+              '#ecc94b',
+              '#48bb78',
+              '#38a169'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+    
+    // إضافة هدف جديد
+    document.getElementById('add-goal-btn').addEventListener('click', function() {
+      const goalTitle = prompt('أدخل عنوان الهدف:');
+      if (!goalTitle) return;
+      
+      const goalTarget = parseInt(prompt('أدخل الهدف (رقم):'));
+      if (!goalTarget || isNaN(goalTarget)) return;
+      
+      const goalType = prompt('نوع الهدف (favorites/ratings/comments):');
+      if (!['favorites', 'ratings', 'comments'].includes(goalType)) return;
+      
+      const newGoal = {
+        id: 'goal-' + Date.now(),
+        title: goalTitle,
+        target: goalTarget,
+        current: 0,
+        type: goalType,
+        period: 'month',
+        userEmail: currentUser.email
+      };
+      
+      const goals = JSON.parse(localStorage.getItem('userGoals') || '[]');
+      goals.push(newGoal);
+      localStorage.setItem('userGoals', JSON.stringify(goals));
+      
+      loadGoals();
+    });
+
+    // تحميل البيانات عند تحميل الصفحة
+    loadStats();
+    loadFavorites();
+    loadActivity();
+    renderBadges();
+    loadGoals();
+    loadComparison();
+    
+    // إنشاء المخططات بعد تحميل البيانات
+    setTimeout(() => {
+      createActivityChart();
+      createRatingsChart();
+    }, 500);
+  </script>
+</body>
+</html> 

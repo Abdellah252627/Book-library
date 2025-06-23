@@ -1,0 +1,37 @@
+  <div id="user-reply-box" style="display:none;margin-top:2.2rem;background:#fafafa;border-radius:8px;padding:1.1rem 1rem;text-align:center;"></div>
+  <div id="toast" style="display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1a237e;color:#fff;padding:1rem 2.2rem;border-radius:8px;box-shadow:0 2px 8px #0003;font-size:1.1rem;z-index:9999;transition:opacity 0.3s;"></div>
+  <script>
+    // عرض آخر رد للمستخدم إذا وجد
+    const emailInput = document.getElementById('email');
+    const replyBox = document.getElementById('user-reply-box');
+    function showUserReply() {
+      const email = emailInput.value.trim();
+      if (!email) { replyBox.style.display='none'; return; }
+      let msgs = [];
+      try { msgs = JSON.parse(localStorage.getItem('contactMsgs')||'[]'); } catch{}
+      const myMsgs = msgs.filter(m=>m.email===email && m.reply);
+      if (myMsgs.length) {
+        const last = myMsgs[myMsgs.length-1];
+        replyBox.innerHTML = `<b>رد المسؤول على رسالتك:</b><br><span style='color:#080;'>${last.reply.replace(/</g,'&lt;')}</span><br><span style='color:#888;font-size:0.93rem;'>${new Date(last.date).toLocaleString('ar-EG')}</span>`;
+        replyBox.style.display = '';
+        // إشعار منبثق عند وجود رد جديد
+        if (!window._lastReplyShown || window._lastReplyShown !== last.reply) {
+          showToast('📩 لديك رد جديد من المسؤول!');
+          window._lastReplyShown = last.reply;
+        }
+      } else {
+        replyBox.style.display = 'none';
+      }
+    }
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      // صوت تنبيه بسيط
+      try { new Audio('https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae1e2.mp3').play(); } catch{}
+      setTimeout(()=>{ toast.style.opacity = '0'; setTimeout(()=>{toast.style.display='none';},400); }, 3500);
+    }
+    emailInput.addEventListener('input', showUserReply);
+    window.addEventListener('DOMContentLoaded', showUserReply);
+  </script> 

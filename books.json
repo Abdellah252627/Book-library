@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "title": "العادات السبع للناس الأكثر فعالية",
+    "author": "ستيفن كوفي",
+    "category": "تطوير الذات",
+    "cover": "assets/7habits.jpg",
+    "file": "assets/7habits.pdf",
+    "description": "كتاب شهير حول تطوير الذات وتحقيق النجاح."
+  },
+  {
+    "id": 2,
+    "title": "البداية والنهاية",
+    "author": "ابن كثير",
+    "category": "تاريخ إسلامي",
+    "cover": "assets/bidaya.jpg",
+    "file": "assets/bidaya.pdf",
+    "description": "موسوعة تاريخية إسلامية ضخمة."
+  },
+  {
+    "id": 3,
+    "title": "الخيميائي",
+    "author": "باولو كويلو",
+    "category": "روايات",
+    "cover": "assets/alchemist.jpg",
+    "file": "assets/alchemist.pdf",
+    "description": "رواية فلسفية مشهورة تدور حول تحقيق الأحلام."
+  },
+  {
+    "id": 4,
+    "title": "مقدمة ابن خلدون",
+    "author": "ابن خلدون",
+    "category": "فكر",
+    "cover": "assets/muqaddima.jpg",
+    "file": "assets/muqaddima.pdf",
+    "description": "أشهر كتب علم الاجتماع والفكر العربي."
+  },
+  {
+    "id": 5,
+    "title": "قصص الأنبياء",
+    "author": "عبد الوهاب النجار",
+    "category": "أطفال",
+    "cover": "assets/prophets.jpg",
+    "file": "assets/prophets.pdf",
+    "description": "قصص مبسطة للأطفال عن أنبياء الله."
+  },
+  {
+    "id": 6,
+    "title": "العلم ووجود الله",
+    "author": "جون لينوكس",
+    "category": "علوم",
+    "cover": "assets/science_god.jpg",
+    "file": "assets/science_god.pdf",
+    "description": "كتاب يناقش العلاقة بين العلم والإيمان بالله."
+  },
+  {
+    "id": 7,
+    "title": "ألف ليلة وليلة",
+    "author": "مجموعة مؤلفين",
+    "category": "أدب",
+    "cover": "assets/1001nights.jpg",
+    "file": "assets/1001nights.pdf",
+    "description": "مجموعة من أشهر القصص الأدبية العربية."
+  },
+  {
+    "id": 8,
+    "title": "ديوان المتنبي",
+    "author": "المتنبي",
+    "category": "شعر",
+    "cover": "assets/motannabi.jpg",
+    "file": "assets/motannabi.pdf",
+    "description": "أشهر دواوين الشعر العربي."
+  },
+  {
+    "id": 9,
+    "title": "رياض الصالحين",
+    "author": "النووي",
+    "category": "دين",
+    "cover": "assets/riyad.jpg",
+    "file": "assets/riyad.pdf",
+    "description": "كتاب جامع للأحاديث النبوية الشريفة."
+  },
+  {
+    "id": 10,
+    "title": "أساسيات الفيزياء",
+    "author": "فريدريك بيخنر",
+    "category": "فيزياء",
+    "cover": "assets/physics.jpg",
+    "file": "assets/physics.pdf",
+    "description": "كتاب مبسط في أساسيات الفيزياء."
+  },
+  {
+    "id": 11,
+    "title": "مبادئ الاقتصاد",
+    "author": "غريغوري مانكيو",
+    "category": "اقتصاد",
+    "cover": "assets/economics.jpg",
+    "file": "assets/economics.pdf",
+    "description": "كتاب تعليمي في علم الاقتصاد."
+  },
+  {
+    "id": 12,
+    "title": "أساسيات البرمجة بلغة بايثون",
+    "author": "أحمد محمد",
+    "category": "برمجة",
+    "cover": "assets/python.jpg",
+    "file": "assets/python.pdf",
+    "description": "دليل مبسط لتعلم البرمجة بلغة بايثون."
+  },
+  {
+    "id": 13,
+    "title": "فن الحرب",
+    "author": "صن تزو",
+    "category": "إدارة أعمال",
+    "cover": "assets/artofwar.jpg",
+    "file": "assets/artofwar.pdf",
+    "description": "كتاب استراتيجي شهير في الإدارة والقيادة."
+  },
+  {
+    "id": 14,
+    "title": "الطريق إلى النجاح",
+    "author": "إبراهيم الفقي",
+    "category": "تنمية بشرية",
+    "cover": "assets/success.jpg",
+    "file": "assets/success.pdf",
+    "description": "كتاب تحفيزي في تطوير الذات وتحقيق النجاح."
+  },
+  {
+    "id": 15,
+    "title": "قواعد العشق الأربعون",
+    "author": "إليف شافاق",
+    "category": "روايات",
+    "cover": "assets/love40.jpg",
+    "file": "assets/love40.pdf",
+    "description": "رواية روحية وفلسفية مشهورة."
+  },
+  {
+    "id": 16,
+    "title": "الكون في قشرة جوز",
+    "author": "ستيفن هوكينج",
+    "category": "علوم",
+    "cover": "assets/hawking.jpg",
+    "file": "assets/hawking.pdf",
+    "description": "كتاب مبسط في علم الكونيات."
+  },
+  {
+    "id": 17,
+    "title": "الأمير",
+    "author": "نيقولا ميكافيلي",
+    "category": "سياسة",
+    "cover": "assets/prince.jpg",
+    "file": "assets/prince.pdf",
+    "description": "كتاب كلاسيكي في الفكر السياسي."
+  },
+  {
+    "id": 18,
+    "title": "الذكاء العاطفي",
+    "author": "دانييل جولمان",
+    "category": "علم نفس",
+    "cover": "assets/eq.jpg",
+    "file": "assets/eq.pdf",
+    "description": "كتاب عن الذكاء العاطفي وأثره في النجاح."
+  },
+  {
+    "id": 19,
+    "title": "الأسود يليق بك",
+    "author": "أحلام مستغانمي",
+    "category": "روايات",
+    "cover": "assets/black.jpg",
+    "file": "assets/black.pdf",
+    "description": "رواية رومانسية عربية مشهورة."
+  },
+  {
+    "id": 20,
+    "title": "الرجال من المريخ والنساء من الزهرة",
+    "author": "جون غراي",
+    "category": "علاقات أسرية",
+    "cover": "assets/marsvenus.jpg",
+    "file": "assets/marsvenus.pdf",
+    "description": "كتاب شهير عن العلاقات الأسرية وفهم الجنسين."
+  }
+] 

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مكتبة أمة اقرأ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <h1>مكتبة أمة اقرأ</h1>
+      </div>
+      <nav>
+        <a href="index.html">الرئيسية</a>
+        <a href="favorites.html">المفضلة</a>
+        <a href="upload.html">رفع كتاب</a>
+        <a href="chat.html">الدردشة</a>
+        <a href="contact.html">تواصل معنا</a>
+        <a href="top-uploaders.html">لوحة الشرف</a>
+        <span id="admin-link" style="display:none">
+          <a href="admin.html" style="color:#b8860b;font-weight:bold;">لوحة المسؤول</a>
+        </span>
+        <span id="profile-link" style="display:none">
+          <a href="profile.html" style="color:#1a237e;font-weight:bold;">ملفي الشخصي</a>
+        </span>
+        <a href="login.html" id="login-link" style="color:#fff; text-decoration:underline;">تسجيل الدخول / إنشاء حساب</a>
+        <button id="logout-btn" style="display:none; background:#e53e3e; color:#fff; border:none; padding:0.4rem 1.1rem; border-radius:6px; font-size:1rem; cursor:pointer;">تسجيل الخروج</button>
+        <span id="user-info" style="display:none; color:#fff; font-size:1.05rem;"></span>
+        <span id="notif-center-link" style="position:relative;">
+          <button id="notif-center-btn" style="background:none;border:none;cursor:pointer;font-size:1.5rem;vertical-align:middle;position:relative;">🔔<span id="notif-center-count" style="display:none;position:absolute;top:-7px;right:-7px;background:#e53e3e;color:#fff;font-size:0.85rem;padding:0 6px;border-radius:50%;"></span></button>
+          <div id="notif-center-list" style="display:none;position:absolute;top:2.2rem;right:0;min-width:270px;max-width:350px;background:#fff;border-radius:10px;box-shadow:0 2px 12px #0002;z-index:9999;text-align:right;max-height:350px;overflow-y:auto;"></div>
+        </span>
+        <button id="darkmode-btn" title="تبديل الوضع الليلي" style="background:none;border:none;cursor:pointer;font-size:1.5rem;vertical-align:middle;">🌙</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="stats-section" style="max-width:900px;margin:2.5rem auto 1.5rem auto;display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;">
+      <div class="stat-card" style="background:#fff;padding:1.2rem 2.2rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.07);min-width:180px;text-align:center;">
+        <div style="font-size:2.1rem;">📚</div>
+        <div id="stat-books" style="font-size:1.3rem;font-weight:bold;">0</div>
+        <div style="color:#666;">عدد الكتب</div>
+      </div>
+      <div class="stat-card" style="background:#fff;padding:1.2rem 2.2rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.07);min-width:180px;text-align:center;">
+        <div style="font-size:2.1rem;">👤</div>
+        <div id="stat-users" style="font-size:1.3rem;font-weight:bold;">0</div>
+        <div style="color:#666;">عدد المستخدمين</div>
+      </div>
+      <div class="stat-card" style="background:#fff;padding:1.2rem 2.2rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.07);min-width:180px;text-align:center;">
+        <div style="font-size:2.1rem;">⭐️</div>
+        <div id="stat-fav-book" style="font-size:1.05rem;font-weight:bold;">—</div>
+        <div style="color:#666;">الأكثر إضافة للمفضلة</div>
+      </div>
+      <div class="stat-card" style="background:#fff;padding:1.2rem 2.2rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.07);min-width:180px;text-align:center;">
+        <div style="font-size:2.1rem;">🏆</div>
+        <div id="stat-top-rated" style="font-size:1.05rem;font-weight:bold;">—</div>
+        <div style="color:#666;">الأعلى تقييماً</div>
+      </div>
+      <div class="stat-card" style="background:#fff;padding:1.2rem 2.2rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.07);min-width:180px;text-align:center;">
+        <div style="font-size:2.1rem;">💬</div>
+        <div id="stat-comments" style="font-size:1.3rem;font-weight:bold;">0</div>
+        <div style="color:#666;">عدد التعليقات</div>
+      </div>
+    </section>
+
+    <div id="advanced-filters" style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-bottom:1.2rem;justify-content:center;">
+      <select id="filter-category" style="padding:0.4rem 1rem;border-radius:6px;">
+        <option value="">كل التصنيفات</option>
+      </select>
+      <select id="filter-author" style="padding:0.4rem 1rem;border-radius:6px;">
+        <option value="">كل المؤلفين</option>
+      </select>
+      <select id="filter-rating" style="padding:0.4rem 1rem;border-radius:6px;">
+        <option value="">كل التقييمات</option>
+        <option value="5">5 نجوم</option>
+        <option value="4">4+ نجوم</option>
+        <option value="3">3+ نجوم</option>
+        <option value="2">2+ نجوم</option>
+        <option value="1">1+ نجمة</option>
+      </select>
+      <button id="apply-filters" style="background:#1a237e;color:#fff;padding:0.4rem 1.2rem;border:none;border-radius:6px;cursor:pointer;">تصفية</button>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; margin-bottom:1rem;justify-content:center;">
+      <input type="text" id="search" placeholder="ابحث عن كتاب..." style="flex:1; min-width:200px; max-width:400px; padding:0.5rem 1rem; border-radius:6px; border:1px solid #ddd;">
+    </div>
+
+    <div id="books-list">
+      <!-- سيتم عرض الكتب هنا -->
+    </div>
+
+    <section id="random-books-section" style="margin:3rem auto 2rem auto;max-width:900px;">
+      <h2 style="text-align:right;font-size:1.3rem;margin-bottom:1.2rem;">كتب عشوائية</h2>
+      <div id="random-books-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;"></div>
+    </section>
+
+    <section id="suggested-for-you-section" style="display:none;margin:2.5rem 0 1.5rem 0;">
+      <h2 style="font-size:1.3rem;margin-bottom:1.1rem;color:#1a237e;">📚 كتب مقترحة لك</h2>
+      <div id="suggested-for-you-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.2rem;"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>جميع الحقوق محفوظة &copy; مكتبة أمة اقرأ</p>
+  </footer>
+
+  <script src="auth-protect.js"></script>
+  <script src="app.js"></script>
+  <script src="notif.js"></script>
+  <script>
+    // إظهار زر تسجيل الخروج واسم المستخدم إذا كان المستخدم مسجلاً الدخول
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser) {
+      document.getElementById('logout-btn').style.display = 'inline-block';
+      document.getElementById('login-link').style.display = 'none';
+      document.getElementById('user-info').style.display = 'inline-block';
+      document.getElementById('user-info').textContent = 'مرحباً، ' + currentUser.name;
+      document.getElementById('profile-link').style.display = 'inline-block';
+      
+      // إظهار رابط المسؤول إذا كان المستخدم مسؤول
+      if (currentUser.email === 'manager') {
+        document.getElementById('admin-link').style.display = 'inline-block';
+      }
+    }
+
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('loggedInUser');
+      window.location = 'login.html';
+    };
+
+    // الوضع الليلي
+    const darkBtn = document.getElementById('darkmode-btn');
+    function setDarkMode(on) {
+      if (on) {
+        document.body.classList.add('dark');
+        darkBtn.textContent = '☀️';
+        localStorage.setItem('darkMode', '1');
+      } else {
+        document.body.classList.remove('dark');
+        darkBtn.textContent = '🌙';
+        localStorage.setItem('darkMode', '0');
+      }
+    }
+    
+    darkBtn.onclick = function() {
+      setDarkMode(!document.body.classList.contains('dark'));
+    };
+    
+    // تفعيل الوضع الليلي إذا كان محفوظاً
+    if (localStorage.getItem('darkMode') === '1') setDarkMode(true);
+  </script>
+</body>
+</html> 

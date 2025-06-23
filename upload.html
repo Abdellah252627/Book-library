@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إضافة كتاب جديد | مكتبة أمة اقرأ</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .upload-container {max-width: 500px; margin: 3rem auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 2rem;}
+    .upload-container h2 {text-align:center; margin-bottom:1.5rem;}
+    .upload-container label {display:block; margin-bottom:0.3rem;}
+    .upload-container input, .upload-container textarea, .upload-container select {width:100%; padding:0.7rem; margin-bottom:1rem; border:1px solid #ccc; border-radius:6px; font-size:1rem;}
+    .upload-container button {width:100%; background:#2d3748; color:#fff; border:none; padding:0.7rem; border-radius:6px; font-size:1.1rem; cursor:pointer; margin-bottom:0.7rem;}
+    .upload-container button:hover {background:#4a5568;}
+    .cover-preview {display:block; margin:1rem auto; max-width:180px; max-height:240px; border:1px solid #ccc; border-radius:8px;}
+    .success-msg {color:#080; text-align:center; margin-bottom:1rem;}
+    .error-msg {color:#c00; text-align:center; margin-bottom:1rem;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span style="font-size:2.1rem;vertical-align:middle;">📖</span> مكتبة أمة اقرأ</h1>
+    <nav>
+      <a href="index.html" style="color:#fff; text-decoration:underline; margin-right: 1rem;">الرئيسية</a>
+      <button id="darkmode-btn" title="تبديل الوضع الليلي" style="background:none;border:none;cursor:pointer;margin-right:1rem;font-size:1.5rem;vertical-align:middle;">🌙</button>
+    </nav>
+  </header>
+  <main>
+    <div class="upload-container" id="upload-protected">
+      <h2>إضافة كتاب جديد</h2>
+      <div id="auth-msg" style="display:none; text-align:center; color:#c00; margin-bottom:1.5rem;"></div>
+      <div id="upload-form-container">
+        <p style="text-align:center; color:#444; margin-bottom:1.2rem; font-size:1.05rem;">يرجى تعبئة جميع الحقول ورفع صورة الغلاف وملف الكتاب (PDF).<br>سيتم عرض الغلاف مباشرة ويمكنك التأكد من صحة البيانات قبل الإضافة.</p>
+        <div id="msg"></div>
+        <form id="upload-form">
+          <label for="title">اسم الكتاب <span style="color:#c00">*</span></label>
+          <input type="text" id="title" required placeholder="مثال: العادات السبع للناس الأكثر فعالية">
+          <label for="author">اسم المؤلف <span style="color:#c00">*</span></label>
+          <input type="text" id="author" required placeholder="مثال: ستيفن كوفي">
+          <label for="category">التصنيف <span style="color:#c00">*</span></label>
+          <input type="text" id="category" list="categories-list" required placeholder="اختر أو اكتب تصنيفًا">
+          <datalist id="categories-list">
+            <option value="تطوير الذات">
+            <option value="روايات">
+            <option value="تاريخ إسلامي">
+            <option value="أدب">
+            <option value="شعر">
+            <option value="دين">
+            <option value="علوم">
+            <option value="طب">
+            <option value="هندسة">
+            <option value="اقتصاد">
+            <option value="إدارة أعمال">
+            <option value="سياسة">
+            <option value="فلسفة">
+            <option value="علم نفس">
+            <option value="تربية">
+            <option value="تعليم">
+            <option value="قانون">
+            <option value="قصص أطفال">
+            <option value="سير ذاتية">
+            <option value="تكنولوجيا">
+            <option value="كمبيوتر">
+            <option value="برمجة">
+            <option value="رياضيات">
+            <option value="فيزياء">
+            <option value="كيمياء">
+            <option value="أحياء">
+            <option value="جغرافيا">
+            <option value="فكر">
+            <option value="إعلام">
+            <option value="فن">
+            <option value="تصميم">
+            <option value="تسويق">
+            <option value="تاريخ">
+            <option value="اجتماع">
+            <option value="لغات">
+            <option value="ترجمة">
+            <option value="دراسات إسلامية">
+            <option value="حديث">
+            <option value="تفسير">
+            <option value="فقه">
+            <option value="أصول الدين">
+            <option value="تفسير أحلام">
+            <option value="طبخ">
+            <option value="سفر">
+            <option value="سياحة">
+            <option value="موسيقى">
+            <option value="تربية رياضية">
+            <option value="تنمية بشرية">
+            <option value="مسرح">
+            <option value="مقالات">
+            <option value="مجلات">
+            <option value="أخرى">
+          </datalist>
+          <label for="desc">وصف مختصر</label>
+          <textarea id="desc" rows="2" placeholder="نبذة عن الكتاب أو محتواه..."></textarea>
+          <label for="cover">غلاف الكتاب (صورة) <span style="color:#c00">*</span></label>
+          <input type="file" id="cover" accept="image/*" required>
+          <img id="cover-preview" class="cover-preview" style="display:none;" alt="معاينة الغلاف">
+          <label for="file">ملف الكتاب (PDF) <span style="color:#c00">*</span></label>
+          <input type="file" id="file" accept="application/pdf" required>
+          <div id="pdf-preview-container" style="display:none; text-align:center; margin-bottom:1rem;">
+            <span style="font-size:0.95rem; color:#555;">معاينة أول صفحة من الكتاب:</span><br>
+            <iframe id="pdf-preview" style="width:100%;max-width:320px;height:220px;border:1px solid #ccc;border-radius:6px;margin-top:0.5rem;"></iframe>
+          </div>
+          <button type="submit" style="font-size:1.2rem; background:#38a169;">&#43; إضافة الكتاب</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>جميع الحقوق محفوظة &copy; مكتبة أمة اقرأ</p>
+  </footer>
+  <script src="auth-protect.js"></script>
+  <script src="upload.js"></script>
+  <script src="notif.js"></script>
+  <script>
+    // الوضع الليلي
+    const darkBtn = document.getElementById('darkmode-btn');
+    function setDarkMode(on) {
+      if (on) {
+        document.body.classList.add('dark');
+        darkBtn.textContent = '☀️';
+        localStorage.setItem('darkMode', '1');
+      } else {
+        document.body.classList.remove('dark');
+        darkBtn.textContent = '🌙';
+        localStorage.setItem('darkMode', '0');
+      }
+    }
+    darkBtn.onclick = function() {
+      setDarkMode(!document.body.classList.contains('dark'));
+    };
+    if (localStorage.getItem('darkMode') === '1') setDarkMode(true);
+  </script>
+</body>
+</html> 

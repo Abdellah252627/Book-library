@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الدردشة - مكتبة أمة اقرأ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .chat-box { background:#fff; border-radius:12px; box-shadow:0 2px 8px #0001; padding:2.5rem 2rem; max-width:600px; margin:2.5rem auto; }
+    .chat-title { font-size:2rem; color:#1a237e; margin-bottom:1.2rem; text-align:center; }
+    #chat-messages { background:#fafafa; border-radius:8px; min-height:220px; max-height:340px; overflow-y:auto; padding:1rem; margin-bottom:1.2rem; }
+    .chat-msg { margin-bottom:1.1rem; }
+    .chat-msg.me { background:#e6ffe6; border-radius:7px; padding:0.5rem 0.7rem; }
+    .chat-msg .sender { color:#1a237e; font-weight:bold; }
+    .chat-msg .time { color:#888; font-size:0.93rem; margin-right:0.7rem; }
+    #chat-form { display:flex; gap:0.7rem; }
+    #chat-input { flex:1; }
+    #chat-form button { min-width:90px; }
+  </style>
+</head>
+<body>
+  <div class="chat-box">
+    <div class="chat-title">الدردشة الجماعية</div>
+    <div id="chat-messages"></div>
+    <div id="chat-toast" style="display:none;position:fixed;top:30px;left:50%;transform:translateX(-50%);background:#1a237e;color:#fff;padding:0.8rem 2rem;border-radius:8px;box-shadow:0 2px 8px #0003;font-size:1.05rem;z-index:9999;transition:opacity 0.3s;"></div>
+    <form id="chat-form" autocomplete="off">
+      <input type="text" id="chat-input" placeholder="اكتب رسالتك..." maxlength="300" required>
+      <button type="submit">إرسال</button>
+    </form>
+  </div>
+  <script>
+    // اسم المستخدم الحالي
+    let username = '';
+    try {
+      username = JSON.parse(localStorage.getItem('currentUser'))?.username || localStorage.getItem('loggedInUser') || '';
+    } catch{}
+    if (!username) {
+      alert('يجب تسجيل الدخول للمشاركة في الدردشة.');
+      window.location = 'login.html';
+    }
+    // جلب الرسائل
+    function getMsgs() {
+      try { return JSON.parse(localStorage.getItem('chatMsgs')||'[]'); } catch{return[];}
+    }
+    function setMsgs(msgs) {
+      localStorage.setItem('chatMsgs', JSON.stringify(msgs));
+    }
+    // جلب صورة رمزية لمستخدم
+    function getAvatar(username) {
+      let gender = '';
+      try {
+        const users = JSON.parse(localStorage.getItem('users')||'[]');
+        const u = users.find(u=>u.username===username);
+        gender = u?.gender || '';
+      } catch{}
+      if (username==='manager') {
+        return 'https://robohash.org/manager?set=set3&size=40x40';
+      } else if (gender==='male') {
+        return 'https://openpeeps.com/avatar/male.svg';
+      } else if (gender==='female') {
+        return 'https://openpeeps.com/avatar/female.svg';
+      } else {
+        return 'https://robohash.org/'+encodeURIComponent(username)+'?set=set3&size=40x40';
+      }
+    }
+    // عرض الرسائل
+    let lastMsgCount = 0;
+    function renderMsgs() {
+      const msgs = getMsgs();
+      const box = document.getElementById('chat-messages');
+      box.innerHTML = msgs.map(m=>
+        `<div class="chat-msg${m.user===username?' me':''}">
+          <img src="${getAvatar(m.user)}" alt="avatar" style="width:32px;height:32px;border-radius:50%;vertical-align:middle;margin-left:0.5rem;background:#eee;object-fit:cover;">
+          <span class="sender">${m.user}</span>
+          <span class="time">${new Date(m.date).toLocaleString('ar-EG')}</span><br>
+          <span>${m.text.replace(/</g,'&lt;')}</span>
+        </div>`
+      ).join('');
+      // تنبيه صوتي عند وصول رسالة جديدة
+      if (msgs.length > lastMsgCount && lastMsgCount !== 0) {
+        try { new Audio('https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae1e2.mp3').play(); } catch{}
+        showChatToast('💬 وصلت رسالة جديدة في الدردشة');
+      }
+      lastMsgCount = msgs.length;
+      box.scrollTop = box.scrollHeight;
+    }
+    renderMsgs();
+    // إرسال رسالة
+    document.getElementById('chat-form').onsubmit = function(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+      const msgs = getMsgs();
+      msgs.push({ user: username, text, date: new Date().toISOString() });
+      setMsgs(msgs);
+      input.value = '';
+      renderMsgs();
+    };
+    // تحديث تلقائي كل 3 ثوانٍ
+    setInterval(renderMsgs, 3000);
+    function showChatToast(msg) {
+      const toast = document.getElementById('chat-toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      setTimeout(()=>{ toast.style.opacity = '0'; setTimeout(()=>{toast.style.display='none';},400); }, 3000);
+    }
+  </script>
+</body>
+</html> 

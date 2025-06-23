@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول / إنشاء حساب | مكتبة أمة اقرأ</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-container {
+      max-width: 400px; 
+      margin: 3rem auto; 
+      background: #fff; 
+      border-radius: 10px; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07); 
+      padding: 2rem;
+    }
+    .auth-container h2 {
+      text-align:center; 
+      margin-bottom:1.5rem;
+      color: #b8860b;
+    }
+    .auth-container label {
+      display:block; 
+      margin-bottom:0.3rem;
+      font-weight: bold;
+      color: #333;
+    }
+    .auth-container input, .auth-container select {
+      width:100%; 
+      padding:0.7rem; 
+      margin-bottom:1rem; 
+      border:1px solid #ccc; 
+      border-radius:6px; 
+      font-size:1rem;
+      box-sizing: border-box;
+    }
+    .auth-container input:focus, .auth-container select:focus {
+      outline: none;
+      border-color: #b8860b;
+      box-shadow: 0 0 0 2px rgba(184,134,11,0.2);
+    }
+    .auth-container button {
+      width:100%; 
+      background:#b8860b; 
+      color:#fff; 
+      border:none; 
+      padding:0.7rem; 
+      border-radius:6px; 
+      font-size:1.1rem; 
+      cursor:pointer; 
+      margin-bottom:0.7rem;
+      transition: background 0.3s ease;
+    }
+    .auth-container button:hover {
+      background:#daa520;
+    }
+    .auth-toggle {
+      text-align:center; 
+      margin-top:1rem;
+    }
+    .auth-toggle a {
+      color:#b8860b; 
+      cursor:pointer; 
+      text-decoration:underline;
+      font-weight: bold;
+    }
+    .error-msg {
+      color:#e53e3e; 
+      text-align:center; 
+      margin-bottom:1rem;
+      background: #fed7d7;
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #feb2b2;
+    }
+    .success-msg {
+      color:#38a169; 
+      text-align:center; 
+      margin-bottom:1rem;
+      background: #c6f6d5;
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #9ae6b4;
+    }
+    .admin-note {
+      margin-top:1.5rem;
+      text-align:center;
+      color:#666;
+      font-size:0.9rem;
+      background: #f7fafc;
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+    .admin-note b {
+      color: #b8860b;
+    }
+    .admin-credentials {
+      background:#fff3cd;
+      padding:0.5rem 1rem;
+      border-radius:5px;
+      border: 1px solid #ffeaa7;
+      margin-top: 0.5rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <h1>مكتبة أمة اقرأ</h1>
+      </div>
+      <nav>
+        <a href="index.html">الرئيسية</a>
+      </nav>
+    </div>
+  </header>
+  
+  <main>
+    <div class="auth-container">
+      <h2 id="form-title">تسجيل الدخول</h2>
+      <div id="msg"></div>
+      <form id="auth-form">
+        <label for="username">اسم المستخدم</label>
+        <input type="text" id="username" required>
+        
+        <div id="email-div" style="display:none;">
+          <label for="email">البريد الإلكتروني</label>
+          <input type="email" id="email">
+        </div>
+        
+        <label for="password">كلمة المرور</label>
+        <input type="password" id="password" required>
+        
+        <div id="confirm-password-div" style="display:none;">
+          <label for="confirm-password">تأكيد كلمة المرور</label>
+          <input type="password" id="confirm-password">
+        </div>
+        
+        <label for="gender">الجنس <span style="color:#e53e3e">*</span></label>
+        <select id="gender" required>
+          <option value="">اختر الجنس</option>
+          <option value="male">ذكر</option>
+          <option value="female">أنثى</option>
+        </select>
+        
+        <button type="submit" id="submit-btn">دخول</button>
+      </form>
+      
+      <div class="auth-toggle">
+        <span id="toggle-text">ليس لديك حساب؟</span>
+        <a id="toggle-link">إنشاء حساب</a>
+      </div>
+      
+      <div class="admin-note">
+        <b>ملاحظة:</b><br>
+        <div style="margin-top:0.7rem;color:#666;font-size:0.9rem;">
+          ستظهر صورة رمزية مناسبة لجنسك في الموقع.
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <p>جميع الحقوق محفوظة &copy; مكتبة أمة اقرأ</p>
+  </footer>
+  
+  <script src="login.js"></script>
+</body>
+</html> 
